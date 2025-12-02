@@ -25,6 +25,19 @@ class ImagePickerDemo extends StatefulWidget {
 }
 
 class _ImagePickerDemoState extends State<ImagePickerDemo> {
+
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+  
+  Future<void> _takePhoto() async {
+  final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+
+  if (photo != null) {
+    setState(() {
+      _image = File(photo.path);
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +46,20 @@ class _ImagePickerDemoState extends State<ImagePickerDemo> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('No image selected'),
+            ElevatedButton(
+              onPressed: _takePhoto,
+              child: const Text('Take Photo'),
+            ),
+             if (_image != null)
+                Image.file(_image!, height: 300)
+            else
+               const Text('No image selected'),
+            
+            
           ],
         ),
       ),
     );
   }
 }
+
